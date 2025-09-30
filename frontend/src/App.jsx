@@ -21,10 +21,13 @@ function App() {
     formData.append("file", image);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/predict", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      const res = await axios.post(
+        "http://127.0.0.1:8000/predict",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       setResult(res.data);
     } catch (err) {
       console.error(err);
@@ -33,7 +36,7 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "40px"}}>
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
       <h1>Violence Detection</h1>
       <input type="file" accept="image/*" onChange={handleFileChange} />
 
@@ -44,7 +47,10 @@ function App() {
       )}
 
       <br />
-      <button onClick={handleSubmit} style={{ marginTop: "20px", padding: "10px 20px", backgroundColor:"pink" }}>
+      <button
+        onClick={handleSubmit}
+        style={{ marginTop: "20px", padding: "10px 20px", backgroundColor: "pink" }}
+      >
         Predict
       </button>
 

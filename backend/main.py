@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from transformers import AutoFeatureExtractor, AutoModelForImageClassification
+from transformers import ViTFeatureExtractor, ViTForImageClassification
 from PIL import Image
 import torch
 import io
@@ -16,10 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load model + feature extractor
-MODEL_NAME = "google/vit-small-patch16-224"  # or some small model
-model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
-extractor = AutoFeatureExtractor.from_pretrained(MODEL_NAME)
+# Load violence detection model
+MODEL_NAME = "jaranohaal/vit-base-violence-detection"
+model = ViTForImageClassification.from_pretrained(MODEL_NAME)
+extractor = ViTFeatureExtractor.from_pretrained(MODEL_NAME)
 model.eval()
 
 LABELS = ["Non-violence", "Violence"]
@@ -35,6 +35,7 @@ def predict(img: Image.Image):
 
 @app.post("/predict")
 async def predict_image(file: UploadFile = File(...)):
+    # Read image
     image = Image.open(io.BytesIO(await file.read())).convert("RGB")
     pred_class, probs = predict(image)
     return {
